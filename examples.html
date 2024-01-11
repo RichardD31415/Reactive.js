@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reactive.js</title>
+  </head>
+  <body>
+    <h1>Reactive.js</h1>
+    <p>
+      Reactive.js is a simple reactive state management library that allows you
+      to create reactive objects called Reactives that can be used to track and
+      update state. It was designed to be used directly in smaller projects that
+      need to monitor complex state pipelines, but don't need the overhead of a
+      large library like Vue, React, or Angular.
+    </p>
+    <h2>Details:</h2>
+    <ul>
+      <li>Author(s): Richard J Decker</li>
+      <li>Version: 1.0.0 (08 Jan 2024)</li>
+      <li>License: <a href="https://mit-license.org/">MIT</a></li>
+      <li>
+        GitHub:
+        <a href="https://github.com/bluemodus-rDecker/Reactive.js"
+          >Reactive.js</a
+        >
+      </li>
+    </ul>
+    <h2>Purpose:</h2>
+    <p>
+      I wanted a simple reactive state management library that I could use in my
+      projects without having to install a large library like Vue or React. This
+      script is a simple implementation of the reactive state management pattern
+      that I have used in projects. The big advantage of this library is that it
+      is small, simple, and easy to understand without having to learn a large
+      library.
+    </p>
+    <h2>How It Works:</h2>
+    <p>
+      The Reactive function creates a reactive object that allows tracking and
+      updating of state using the get, set, watch, unwatch, and forget methods.
+    </p>
+    <p>
+      The Derived function creates a derived state that depends on an array of
+      reactives and a derivation function.
+    </p>
+    <p>
+      The Effect function creates an effect that watches a list of reactives and
+      invokes a callback function when any of the reactives change.
+    </p>
+    <p>
+      We can begin by importing our reactive function from the Reactive script
+    </p>
+    <code>import Reactive from "./reactive.js"</code>
+    <h2>Definitions:</h2>
+    <ul>
+      <li>
+        Reactive: A reactive object that allows tracking and updating of state.
+      </li>
+      <li>State: The current state/data/value of a reactive object.</li>
+      <li>
+        Watcher: A function that is called when the state of a reactive object
+        changes.
+      </li>
+      <li>
+        Derivation: A function that computes a derived state from an array of
+        reactives. A Derivation IS a type of Reactive.
+      </li>
+      <li>
+        Derived State: A state that is computed from an array of reactives using
+        a derivation function.
+      </li>
+      <li>
+        Effect: A function that watches a list of reactives and invokes a
+        callback function when any of the reactives change. Think of it as a
+        watcher for multiple reactives. An Effect IS NOT a type of Reactive.
+      </li>
+    </ul>
+    <h2>Reactive:</h2>
+    <p>
+      To create a reactive object, call the Reactive function with an initial
+      state value:
+    </p>
+    <code>const reactive = Reactive("initial state");</code>
+    <p>To get the current state at any time, call the get method:</p>
+    <code>reactive.get(); // returns the current state</code>
+    <p>To set the state, call the set method with the new state value:</p>
+    <code>reactive.set("new state");</code>
+    <p>
+      It is a common mistake to directly set the state using the reactive
+      object:
+    </p>
+    <code>reactive = "new state"; // This will break</code>
+    <p>
+      To watch for changes to the state, call the watch method with a watcher
+      function:
+    </p>
+    <code>reactive.watch((state) => { console.log(state); });</code>
+    <p>
+      The watcher function will be called with the current state being passed to
+      the function whenever the state changes.
+    </p>
+    <p>
+      To stop watching for changes to the state, call the unwatch method with
+      the named watcher function you want to remove:
+    </p>
+    <code>reactive.unwatch(watcher);</code>
+    <p>
+      To stop watching for changes to the state all together, call the forget
+      method:
+    </p>
+    <code>reactive.forget();</code>
+    <p>This will remove all watchers from the Reactive, so use it carefully.</p>
+    <p>
+      All Reactive types (Reactive, Derivation) support input binding, text
+      interpolation, and attribute binding.
+    </p>
+    <h2>Derived:</h2>
+    <p>Start off by importing the Derived function</p>
+    <code>import { Derived } from "./Reactive.js";</code>
+    <p>
+      To create a derived object, call the Derived function with an array of
+      reactives and a derivation function:
+    </p>
+    <code>
+      const derived = Derived([reactive1, reactive2], () => { return
+      reactive1.get() + reactive2.get(); });
+    </code>
+    <p>To get the current derived state at any time, call the get method:</p>
+    <code>derived.get();</code>
+    <p>
+      A Derivation IS a type of Reactive, so all Reactive methods are available
+      to the Derived object. This means that you can use the set, watch,
+      unwatch, and forget methods on the Derived object. Setting the state of a
+      Derived object explicitly with <code>derived.set("new state")</code> will
+      work, but it is not recommended as this bypasses the point of a Derived
+      being a computed state.
+    </p>
+    <h2>Effect:</h2>
+    <p>Start off by importing the Effect function</p>
+    <code>import { Effect } from "./Reactive.js";</code>
+    <p>
+      To create an effect, call the Effect function with an array of reactives
+      and a watcher function:
+    </p>
+    <code>
+      Effect([reactive1, reactive2], () => { console.log("reactive1 or reactive2
+      changed"); });
+    </code>
+    <p>
+      An Effect IS NOT a type of Reactive, so it does not support the set,
+      watch, unwatch, and forget methods. The Effect Function is just a helper
+      function that allows you to watch multiple reactives with a single watcher
+      function.
+    </p>
+    <h2>Bindings:</h2>
+    <p>
+      Bindings are a way to automatically bind inputs, text interpolations, and
+      attributes to a Reactive.
+    </p>
+    <p>
+      Bindings work with any Reactive, so they work with both Reactive and
+      Derived objects.
+    </p>
+    <p>
+      By binding to a Reactive, the state of the reactive will become the source
+      of truth for the desired binding, updating values automatically.
+    </p>
+    <p>
+      To bind to a Reactive, pass a bindingString as the last argument to the
+      Reactive or Derived function:
+    </p>
+    <code>
+      Reactive("initial state", "bindingString");, Derived([reactive1,
+      reactive2], () => { return reactive1.get() + reactive2.get(); }, "binding
+      string");
+    </code>
+    <p>
+      The bindingString can be any string, but it is recommended to use a
+      descriptive string that describes the binding.
+    </p>
+    <p>
+      Once the bindingString is set, the Reactive or Derived object will
+      automatically bind to any inputs, text interpolations, and attributes that
+      have the bindingString as an attribute.
+    </p>
+    <h3>Input Binding:</h3>
+    <p>
+      To bind an input to a Reactive, add the bindingString as a [input]
+      attribute to the input:
+    </p>
+    <code>&lt;input [input]="bindingString" /&gt;</code>
+    <p>
+      The input will now automatically update the Reactive state when the input
+      value changes, and the input value will automatically update when the
+      Reactive state changes.
+    </p>
+    <p>Heres an example, below is a text input, bound to a reactive state.</p>
+    <p>
+      Input: <code>&lt;input type="text" [input]="reactive1" /&gt;</code>:
+      <input type="text" [input]="reactive1" />
+    </p>
+    <p>
+      Now that we have an input element, we can create a Reactive, and add a
+      bindingString to it so it knows to get its value from the above input.
+    </p>
+    <code>const reactive1 = Reactive("Initial State", "reactive1");</code>
+    <p>
+      Notice how we are setting the initial state when we call the reactive
+      function, and also notice how the input element's value is "Initial State"
+    </p>
+    <p>
+      Now, we can add a watcher to this Reactive that logs to the console the
+      value of state whenever it is updated.
+    </p>
+    <code>reactive1.watch((state) => { console.log(state); });</code>
+    <p>
+      Go ahead and open your browsers dev tools (CRTL + SHIFT + I), and then go
+      to the console tab.
+    </p>
+    <p>
+      Now type something into the input element, you'll notice that the console
+      keeps logging out exactly what youre typing.
+    </p>
+    <p>
+      And bam, just like that we've attached an input element to a reactive
+      state with input binding all in less than 5 lines of code, no
+      eventListeners to play with or explicit (imperitive) operational
+      instructions. Our state now just knows to update itself and perform the
+      watcher function automatically when the input changes.
+    </p>
+    <script type="module" defer>
+      import { Reactive } from "./Reactive.js";
+      const reactive1 = Reactive("Initial State", "reactive1");
+      reactive1.watch((state) => {
+        console.log(state);
+      });
+    </script>
+    <h3>Click Binding:</h3>
+    <p>
+      To bind a click event to a Reactive, add the bindingString as a [click]
+      attribute to the element:
+    </p>
+    <code>&lt;button [click]="bindingString"&gt;Click Me&lt;/button&gt;</code>
+    <p>
+      The Reactive will now automatically invert its state when the element is
+      clicked.
+    </p>
+    <p>
+      Note: The click event can ONLY be bound to a Reactive that holds a boolean
+      state, it will not work with complex state or other primative types.
+    </p>
+    <p>
+      Lets try binding a button to a Reactive that holds a boolean state. First
+      we need to create a Reactive with a boolean state.
+    </p>
+    <code>const reactiveBool = Reactive(false, "reactiveBool");</code>
+    <p>
+      Now lets create a button element and bind the click event to the Reactive.
+    </p>
+    <p>
+      Button:
+      <code>&lt;button [click]="reactiveBool"&gt;Click Me&lt;/button&gt;</code>
+    </p>
+    <button [click]="reactiveBool">Click Me</button>
+    <p>
+      Now, as you click the button, you'll notice that the state of the Reactive
+      inverts between true and false. Lets tie this state to a p tag and see its
+      value update real time.
+    </p>
+    <p>Note: This example used text interpolation, which is covered below.</p>
+    <code>
+      &lt;p&gt;{ reactiveBool } (missing the second curly brackets on purpose to
+      stop interpolation)&lt;/p&gt;
+    </code>
+    <p>{{ reactiveBool }}</p>
+    <script type="module" defer>
+      import { Reactive } from "./Reactive.js";
+      const reactiveBool = Reactive(false, "reactiveBool");
+    </script>
+    <h3>Text Interpolation:</h3>
+    <p>
+      To bind a text interpolation to a Reactive, add the bindingString to the
+      text interpolation brackets inside any element as content:
+    </p>
+    <code>&lt;p&gt;{{ bindingString }}&lt;/p&gt;</code>
+    <p>
+      The Reactive will now automatically update the text interpolation content
+      when the Reactive state changes.
+    </p>
+    <p>
+      This strategy also works if there is content before or after the binding
+      string:
+      <code
+        >&lt;p&gt;Some Content Before: {{ bindingString }} : And Some Content
+        After&lt;/p&gt;</code
+      >. The content before and after the bindingString will remain unchanged.
+    </p>
+    <p>
+      Heres an example, below is a paragraph element, bound to a reactive state.
+    </p>
+    <p>
+      First we initialize a new Reactive, lets call it reactive2. You can see
+      that for the initial state we passed in an empty string, and then added
+      the bindingString "reactive2" as the second argument.
+    </p>
+    <code>const reactive2 = Reactive("", "reactive2");</code>
+    <p>
+      We also create an input element and input bind the Reactive to that, but
+      that step was completed above and will be skipped here on out.
+    </p>
+    <p>Now, lets create the paragraph element we want to interpolate into</p>
+    <p>
+      Paragraph:
+      <code
+        >&lt;p&gt;{ reactive2 } (missing the second curly brackets on purpose to
+        stop interpolation)&lt;/p&gt;</code
+      >: {{ reactive2 }}
+    </p>
+    <p>
+      As you type in this input: <input type="text" [input]="reactive2" /> The
+      value of the interpolation above also changes in real time
+    </p>
+    <p>
+      This happens because the Reactive is using input binding to get the value
+      of the input element, and then using text interpolation to insert that
+      value into the paragraph.
+    </p>
+    <script type="module" defer>
+      import { Reactive } from "./Reactive.js";
+      const reactive2 = Reactive("", "reactive2");
+    </script>
+    <p>
+      As you can see, weve now been able to bind a state to both an input AND an
+      output that makes real applicational sense. All of this was acheived with
+      just a single line of JavaScript, and simply adding a single attribute to
+      your input and an interpolation in your paragraph. Only 1 new line, you
+      were already making the input and p tag, those just took in some extra
+      characters.
+    </p>
+    <h3>Attribute Binding:</h3>
+    <p>
+      To bind an attribute to a Reactive, add the bindingString value to any
+      attribute surrounded by brackets to any element. class example below.
+    </p>
+    <code>&lt;p [class]="bindingString"&gt;Text&lt;/p&gt;</code>
+    <p>
+      The Reactive will now automatically update the class attribute when the
+      Reactive state changes.
+    </p>
+    <p>
+      This works for any attribute, including custom attributes:
+      <code>&lt;p [custom-attribute]="bindingString"&gt;Text&lt;/p&gt;</code>.
+    </p>
+    <p>
+      This strategy also works if the element already has the targeted
+      attribute:
+      <code
+        >&lt;p class="existing-class" [class]="binding
+        string"&gt;Text&lt;/p&gt;</code
+      >.
+    </p>
+    <p>
+      The existing class will remain unchanged, but the value of the Reactive
+      will be added to the classlist.
+    </p>
+    <p>
+      Lets try modifying the class of an element and make it display different
+      styles as a result. First we need to make some style that we can target,
+      so lets add a stylesheet with a few different color classes.
+    </p>
+    <code>.red { color: red; }</code>
+    <code>.blue { color: blue; }</code>
+    <code>.green { color: green; }</code>
+    <style>
+      .red {
+        color: red;
+      }
+      .blue {
+        color: blue;
+      }
+      .green {
+        color: green;
+      }
+    </style>
+    <p>
+      Now lets create a Reactive and bind it to the class of a paragraph
+      element.
+    </p>
+    <code>const reactive3 = Reactive("", "reactive3");</code>
+    <p>
+      Notice how we initialized the reactive with an empty string. Now lets
+      create a paragraph element and bind the class to the Reactive.
+    </p>
+    <p>
+      Paragraph:
+      <code
+        >&lt;p [class]="reactive3"&gt;Here is some text, Lorem ipsum dolor sit
+        amet, consectetur adipisicing elit. Fugit, recusandae!&lt;/p&gt;</code
+      >
+    </p>
+    <p [class]="reactive3">
+      Here is some text, Lorem ipsum dolor sit amet, consectetur adipisicing
+      elit. Fugit, recusandae!
+    </p>
+    <p>
+      Now, as you type in this input:
+      <input type="text" [input]="reactive3" />
+      The class of the paragraph element will change to red, blue, or green
+      depending on what you type.
+    </p>
+    <script type="module" defer>
+      import { Reactive } from "./Reactive.js";
+      const reactive3 = Reactive("", "reactive3");
+    </script>
+    <h2>Expressions:</h2>
+    <p>
+      Another quality of life feature of a Reactive is its ability to resolve
+      template javascript expressions. Expressions are limited to only attribute
+      binding and text interpolation (since it doesnt really make sence to add
+      an expression to your input elements).
+    </p>
+    <p>
+      Expressions are any valid JavaScript expression that returns a value.
+      Expressions can also be used to access properties of the Reactive state.
+    </p>
+    <p>
+      Lets try adding an expression to our paragraph element from above. First
+      we need to create a Reactive with a property on it.
+    </p>
+    <code> const reactive4 = Reactive({ property: "red" }, "reactive4"); </code>
+    <p>
+      Now lets add an expression to our paragraph element that will access the
+      property on the Reactive.
+    </p>
+    <p>
+      Paragraph:
+      <code
+        >&lt;p [class]="reactive4.property"&gt;Here is some text, Lorem ipsum
+        dolor sit amet, consectetur adipisicing elit. Fugit,
+        recusandae!&lt;/p&gt;</code
+      >
+    </p>
+    <p [class]="reactive4.property">
+      Here is some text, Lorem ipsum dolor sit amet, consectetur adipisicing
+      elit. Fugit, recusandae!
+    </p>
+    <script type="module" defer>
+      import { Reactive } from "./Reactive.js";
+      const reactive4 = Reactive({ property: "red" }, "reactive4");
+    </script>
+    <p>
+      Expressions also supports almost any valid ES6 javascript. Lets create
+      another reactive (5) and attach its length to an expression that
+      determines the class on a p tag.
+    </p>
+    <code>const reactive5 = Reactive("", "reactive5");</code>
+    <p>
+      Paragraph:
+      <code
+        >&lt;p [class]="reactive5.length > 4 ? 'green' : 'blue'"&gt;Here is some
+        text, Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit,
+        recusandae!&lt;/p&gt;</code
+      >
+    </p>
+    <p [class]="reactive5.length > 4 ? 'green' : 'blue'">
+      Here is some text, Lorem ipsum dolor sit amet, consectetur adipisicing
+      elit. Fugit, recusandae!
+    </p>
+    <p>
+      Type here:
+      <input type="text" [input]="reactive5" />
+      You'll notice that depending on the length of the string, the color of the
+      p tag changes.
+    </p>
+    <script type="module" defer>
+      import { Reactive } from "./Reactive.js";
+      const reactive5 = Reactive("", "reactive5");
+    </script>
+    <h2>Examples</h2>
+    <p>
+      Lets create a derived example, below are three input elements with the
+      number type. As you type in values for each of the inputs, you'll notice a
+      total value below being updated. This is happening because each of the
+      inputs is bound to a Reactive value, and the total is bound to a Derived
+      value that is computed from the three Reactive values.
+    </p>
+    <p>Lets create our reactives</p>
+    <code
+      >const reactive6 = Reactive(0, "reactive6"); const reactive7 = Reactive(0,
+      "reactive7"); const reactive8 = Reactive(0, "reactive8");</code
+    >
+    <p>
+      Now lets create our derived value that computes the total of the three
+      reactives.
+    </p>
+    <code
+      >const derived2 = Derived([reactive6, reactive7, reactive8], () => {
+      return parseInt(reactive6.get()) + parseInt(reactive7.get()) +
+      parseInt(reactive8.get()); }, "derived2");</code
+    >
+    <p>
+      In the above derived, the first argument is an array of Reactives to
+      monitor for a change, the second argument is a derivation function that
+      calculates and returns the value of the derived based on the dependent
+      Reactives, and the last argument is the bindingString.
+    </p>
+    <p>
+      Now lets create our inputs and bind them to the Reactives, and create our
+      total and bind it to the Derived.
+    </p>
+    <p>
+      Input 1:
+      <code>&lt;input type="number" [input]="reactive6" /&gt;</code>:
+      <input type="number" [input]="reactive6" />
+    </p>
+    <p>
+      Input 2:
+      <code>&lt;input type="number" [input]="reactive7" /&gt;</code>:
+      <input type="number" [input]="reactive7" />
+    </p>
+    <p>
+      Input 3:
+      <code>&lt;input type="number" [input]="reactive8" /&gt;</code>:
+      <input type="number" [input]="reactive8" />
+    </p>
+    <p>
+      Total:
+      <code
+        >&lt;p [class]="derived2"&gt;{ derived2 } (intentianlly misspelled the
+        interpolation to stop binding: {{ derived-2 }})&lt;/p&gt;</code
+      >
+    </p>
+    <p>{{ derived2 }}</p>
+    <script type="module" defer>
+      import { Reactive, Derived } from "./Reactive.js";
+      const reactive6 = Reactive(0, "reactive6");
+      const reactive7 = Reactive(0, "reactive7");
+      const reactive8 = Reactive(0, "reactive8");
+      const derived2 = Derived(
+        [reactive6, reactive7, reactive8],
+        () => {
+          return (
+            parseInt(reactive6.get()) +
+            parseInt(reactive7.get()) +
+            parseInt(reactive8.get())
+          );
+        },
+        "derived2"
+      );
+      import { Effect } from "./Reactive.js";
+      Effect([reactive6, reactive7, reactive8], (event) => {
+        console.log(reactive6.get(), reactive7.get(), reactive8.get());
+      });
+    </script>
+    <p>
+      Thats pretty cool, and all of that is possible with just 6 lines of JS,
+      and adding some attributes to the already existing html.
+    </p>
+    <p>
+      Lets also add an effect, just for fun that console.logs some of the
+      information from the events.
+    </p>
+    <code
+      >Effect([reactive6, reactive7, reactive8], (event) => {
+      console.log(reactive6.get(), reactive7.get(), reactive8.get());});</code
+    >
+    <p>
+      Now, as you type in the inputs, you'll notice that the console logs the
+      three reactives.
+    </p>
+  </body>
+</html>
