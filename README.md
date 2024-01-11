@@ -1,35 +1,30 @@
 ﻿# Reactive.js
 
-Reactive.js is a simple reactive state management library that allows you to create reactive objects called Reactives that can be used to track and update state.
-It was designed to be used directly in smaller projects that need to monitor complex state pipelines, but don't need the overhead of a large library like Vue, React, or Angular.
+Reactive.js is a simple reactive state management library that allows you to create reactive objects called Reactives that can be used to track and update state. It was designed to be used directly in smaller projects that need to monitor complex state pipelines but don't need the overhead of an extensive library like Vue, React, or Angular.
 
 ## Details
 
 - Author(s): Richard J Decker
-- Version: 1.0.0 (08 Jan 2024)
+- Version: 1.0.0 (11 Jan 2024)
 - License: MIT
-- GitHub: https://github.com/bluemodus-rDecker/Reactive.js
+- GitHub: https://github.com/RichardD31415/Reactive.js
 
 ## Purpose:
 
-I wanted a simple reactive state management library that I could use in my projects without having to install a large library like Vue or React.
-This script is a simple implementation of the reactive state management pattern that I have used in projects.
-The big advantage of this library is that it is small, simple, and easy to understand without having to learn a large library.
+I wanted a simple reactive state management library to use in my projects without installing an extensive library like Vue or React.
+This script is a simple implementation of the reactive state management pattern I have used in past projects.
+The significant advantage of this library is that it is small, simple, and easy to understand without having to learn a larger library.
 
 ## How It Works:
 
-The Reactive function creates a reactive object that allows tracking and updating of state using the get, set, watch, unwatch, and forget methods.
-The Derived function creates a derived state that depends on an array of reactives and a derivation function.
-The Effect function creates an effect that watches a list of reactives and invokes a callback function when any of the reactives change.
+The Reactive function creates a reactive object that allows tracking and updating of state using the get, set, watch, unwatch, and forget methods. The Derived function creates a derived state that depends on an array of Reactives and a derivation function. The Effect function creates an effect that watches a list of Reactives and invokes a callback function when any of the watched Reactives change.
 
 ## Definitions:
 
 - Reactive: A reactive object that allows tracking and updating of state.
-- State: The current state/data/value of a reactive object.
-- Watcher: A function that is called when the state of a reactive object changes.
-- Derivation: A function that computes a derived state from an array of reactives. A Derivation IS a type of Reactive.
-- Derived State: A state that is computed from an array of reactives using a derivation function.
-- Effect: A function that watches a list of reactives and invokes a callback function when any of the reactives change. Think of it as a watcher for multiple reactives. An Effect IS NOT a type of Reactive.
+- Watcher: A function that is called when the state of a Reactive object changes.
+- Derived: A function that computes a derived state from an array of Reactives. A Derived IS a type of Reactive.
+- Effect: A function that watches a list of Reactives and invokes a callback function when any of the watched Reactives change. Think of it as a watcher for multiple Reactives. An Effect IS NOT a type of Reactive.
 
 ## Reactive:
 
@@ -51,13 +46,13 @@ To set the state, call the set method with the new state value:
 reactive.set("new state");
 ```
 
-It is a common mistake to directly set the state using the reactive object:
+It is a common mistake to set the state using the reactive object directly:
 
 ```
 reactive = "new state"; //breaks
 ```
 
-This will not work and this is why using const is recommended.
+This will not work, and this is why using const is recommended.
 To watch for changes to the state, call the watch method with a watcher function:
 
 ```
@@ -78,24 +73,24 @@ reactive.forget();
 ```
 
 This will remove all watchers from the Reactive.
-All Reactive types (Reactive, Derivation) support input binding, text interpolation, and attribute binding.
+All Reactive types (Reactive, Derivation) support input binding, click binding, text interpolation, and attribute binding.
 
 ## Derived:
 
-To create a derived object, call the Derived function with an array of Reactives and a derivation function:
+To create a derived object, call the Derived function with an array of Reactives and a Derivation function:
 
 ```
 const derived = Derived([reactive1, reactive2], () => { return reactive1.get() + reactive2.get(); });
 ```
 
-To get the current derived state at any time, call the get method:
+To get the current Derived state at any time, call the get method:
 
 ```
 derived.get();
 ```
 
 A Derivation IS a type of Reactive, so all Reactive methods are available to the Derived object.
-This means that you can use the get, set, watch, unwatch, and forget methods on the Derived object.
+This means you can use the get, set, watch, unwatch, and forget methods on the Derived object.
 Setting the state of a Derived object explicitly with `derived.set("new state")` will work, but it is not recommended as this bypasses the point of a Derived being a computed state.
 
 ## Effect:
@@ -113,7 +108,7 @@ The Effect Function is just a helper function that allows you to watch multiple 
 
 Bindings are a way to automatically bind inputs, text interpolations, and attributes to a reactive.
 Bindings work with any Reactive, so they work with both Reactive and Derived objects.
-By binding to a Reactive, the state of the reactive will become the source of truth for the desired binding, updating values automatically.
+By binding to a Reactive, the state of the Reactive will become the source of truth for the desired binding, updating values automatically.
 To bind to a Reactive, pass a bindingString as the last argument to the Reactive or Derived function:
 
 ```
@@ -121,8 +116,8 @@ Reactive("initial state", "bindingString");
 Derived([reactive1, reactive2], () => { return reactive1.get() + reactive2.get(); }, "bindingString");
 ```
 
-The bindingString can be any string, but it is recommended to use a descriptive string that describes the binding.
-Once the bindingString is set, the Reactive or Derived object will automatically bind to any inputs, text interpolations, and attributes that have the bindingString as an attribute.
+The bindingString can be any string, but using a descriptive string that describes the binding is recommended.
+Once the bindingString is set, the Reactive or Derived object will automatically bind to any inputs, click events, text interpolations, and attributes with the bindingString.
 
 ## Input Binding:
 
@@ -143,8 +138,8 @@ To bind an element to a Reactive, add the bindingString as a [ click ] attribute
 ```
 
 The element will now automatically invert the Reactive state when the element is clicked.
-Note: The Reactive state Must be a boolean for the click binding to work.
-You can attach the click binding to any element, but it is recommended to use a button or other natively clickable elements.
+**Note**: The Reactive state Must be a boolean for the click binding to work.
+You can attach the click binding to any element, but using a button or other natively clickable elements is highly recommended.
 
 ## Text Interpolation Binding:
 
@@ -155,7 +150,7 @@ To bind a text interpolation to a Reactive, add the bindingString to the text in
 ```
 
 The Reactive will now automatically update the text interpolation content when the Reactive state changes.
-This strategy also works if there is content before and/or after the bindingString:
+This strategy also works if there is content before and after the bindingString:
 
 ```
 <p>Before {{ bindingString }} After</p>.
@@ -252,7 +247,7 @@ reactive1.set("new state 1"); // console.log("reactive1 or reactive2 changed");
 
 ```
 const reactive = Reactive("initial state", "bindingString");
-<input [input]="bindingString" /> // The input value will now automatically update the Reactive state when the input value changes, and the input value will automatically update when the Reactive state changes.
+<input [input]="bindingString" /> // The input value will now automatically update the Reactive state when the input value changes, and the input value automatically updates when the Reactive state changes.
 ```
 
 ### Basic Text Interpolation Binding:
@@ -268,5 +263,3 @@ const reactive = Reactive("initial state", "bindingString");
 const reactive = Reactive("initial state", "bindingString");
 <p [class]="bindingString">Text</p> // The Reactive will now automatically update the class attribute when the Reactive state changes.
 ```
-#   R e a c t i v e . j s  
- 
