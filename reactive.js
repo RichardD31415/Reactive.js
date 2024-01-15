@@ -9,7 +9,7 @@
  * Author(s): Richard J Decker
  * Version: 1.0.0 (08 Jan 2024)
  * License: MIT
- * GitHub: https://github.com/bluemodus-rDecker/Reactive.js
+ * GitHub: https://github.com/RichardD31415/Reactive.js
  *
  * Purpose: I wanted a simple reactive state management library that I could use in my projects without having to install a large library like Vue or React.
  * This script is a simple implementation of the reactive state management pattern that I have used in projects.
@@ -20,15 +20,13 @@
  * The Effect function creates an effect that watches a list of reactives and invokes a callback function when any of the reactives change.
  *
  * Definitions:
- * Reactive: A reactive object that allows tracking and updating of state.
- * State: The current state/data/value of a reactive object.
+ * Reactive: A Reactive object that allows tracking and updating of state.
  * Watcher: A function that is called when the state of a reactive object changes.
- * Derivation: A function that computes a derived state from an array of reactives. A Derivation IS a type of Reactive.
- * Derived State: A state that is computed from an array of reactives using a derivation function.
+ * Derived: A Reactive that is computed from an array of reactives using a derivation function.
  * Effect: A function that watches a list of reactives and invokes a callback function when any of the reactives change. Think of it as a watcher for multiple reactives. An Effect IS NOT a type of Reactive.
  *
  * Reactive:
- * To create a reactive object, call the Reactive function with an initial state value: const reactive = Reactive("initial state");
+ * To create a Reactive object, call the Reactive function with an initial state value: const reactive = Reactive("initial state");
  * To get the current state at any time, call the get method: reactive.get();
  * To set the state, call the set method with the new state value: reactive.set("new state");
  * It is a common mistake to directly set the state using the reactive object: reactive = "new state"; This will not work, and is why using const is recommended.
@@ -36,30 +34,30 @@
  * The watcher function will be called with the current state being passed to the function whenever the state changes.
  * To stop watching for changes to the state, call the unwatch method with the named watcher function you want to remove: reactive.unwatch(watcher);
  * To stop watching for changes to the state all together, call the forget method: reactive.forget(); This will remove all watchers from the Reactive.
- * All Reactive types (Reactive, Derivation) support input binding, text interpolation, and attribute binding.
+ * All Reactive types (Reactive, Derived) support input binding, click binding, text interpolation, and attribute binding.
  *
  * Derived:
- * To create a derived object, call the Derived function with an array of reactives and a derivation function:
+ * To create a Derived object, call the Derived function with an array of reactives and a derivation function:
  *    const derived = Derived([reactive1, reactive2], () => { return reactive1.get() + reactive2.get(); });
- * To get the current derived state at any time, call the get method: derived.get();
+ * To get the current Derived state at any time, call the get method: derived.get();
  * A Derivation IS a type of Reactive, so all Reactive methods are available to the Derived object.
- * This menas that you can use the set, watch, unwatch, and forget methods on the Derived object.
+ * This menas that you can use the get, set, watch, unwatch, and forget methods on the Derived object.
  * Setting the state of a Derived object explicitly with derived.set("new state") will work, but it is not recommended as this bypasses the point of a Derived being a computed state.
  *
  * Effect:
- * To create an effect, call the Effect function with an array of reactives and a watcher function:
+ * To create an Effect, call the Effect function with an array of reactives and a watcher function:
  *    Effect([reactive1, reactive2], () => { console.log("reactive1 or reactive2 changed"); });
- * An Effect IS NOT a type of Reactive, so it does not support the set, watch, unwatch, and forget methods.
+ * An Effect IS NOT a type of Reactive, so it does not support the get, set, watch, unwatch, and forget methods.
  * The Effect Function is just a helper function that allows you to watch multiple reactives with a single watcher function.
  *
  * Bindings:
- * Bindings are a way to automatically bind inputs, text interpolations, and attributes to a reactive.
+ * Bindings are a way to automatically bind inputs, click events, text interpolations, and attributes to a reactive.
  * Bindings work with any Reactive, so they work with both Reactive and Derived objects.
- * By binding to a Reactive, the state of the reactive will become the source of truth for the desired binding, updating values automatically.
+ * By binding to a Reactive, the state of the Reactive will become the source of truth for the desired binding, updating values automatically.
  * To bind to a Reactive, pass a bindingString as the last argument to the Reactive or Derived function:
  *    Reactive("initial state", "bindingString");, Derived([reactive1, reactive2], () => { return reactive1.get() + reactive2.get(); }, "bindingString");
  * The bindingString can be any string, but it is recommended to use a descriptive string that describes the binding.
- * Once the bindingString is set, the Reactive or Derived object will automatically bind to any inputs, text interpolations, and attributes that have the bindingString as an attribute.
+ * Once the bindingString is set, the Reactive or Derived object will automatically bind to any inputs, clicks, text interpolations, and attributes that have the bindingString as an attribute.
  *
  * Input Binding:
  * To bind an input to a Reactive, add the bindingString as a [input] attribute to the input: <input [input]="bindingString" />.
@@ -67,7 +65,7 @@
  *
  * Click Binding:
  * To bind an element to a Reactive, add the bindingString as a [click] attribute to the element: <button [click]="bindingString">Text</button>.
- * The element will now automatically invert the Reactive state when the element is clicked.
+ * The element will now automatically invert the boolean Reactive state when the element is clicked.
  * Note: The Reactive state Must be a boolean for the click binding to work.
  * You can attach the click binding to any element, but it is recommended to use a button or other natively clickable elements.
  *
@@ -111,9 +109,13 @@
  * Effect([reactive1, reactive2], () => { console.log("reactive1 or reactive2 changed"); });
  * reactive1.set("new state 1"); // console.log("reactive1 or reactive2 changed");
  *
- * Basic Binding:
+ * Basic Input Binding:
  * const reactive = Reactive("initial state", "bindingString");
  * <input [input]="bindingString" /> // The input value will now automatically update the Reactive state when the input value changes, and the input value will automatically update when the Reactive state changes.
+ *
+ * Basic Click Binding:
+ * const reactive = Reactive(false, "bindingString");
+ * <input [click]="bindingString" /> // The click event will now automatically invert the Reactive state.
  *
  * Basic Text Interpolation Binding:
  * const reactive = Reactive("initial state", "bindingString");
@@ -122,6 +124,8 @@
  * Basic Attribute Binding:
  * const reactive = Reactive("initial state", "bindingString");
  * <p [class]="bindingString">Text</p> // The Reactive will now automatically update the class attribute when the Reactive state changes.
+ *
+ * Check out the examples.html file for some real worls use case examples.
  *
  */
 
