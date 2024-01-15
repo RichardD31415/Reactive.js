@@ -274,9 +274,8 @@ const bindAttributesToReactive = (elementAttributeData, reactive, binding) => {
 const addDerivationWatcherToReactives = (
   // Add the derivation watcher calculation function to each reactive in the reactives array
   reactives,
-  derivedState,
-  derivation,
-  watchers
+  derived,
+  derivation
 ) => {
   reactives.forEach((reactive) => {
     if (typeof reactive !== "object") {
@@ -288,10 +287,7 @@ const addDerivationWatcherToReactives = (
       return;
     }
     reactive.watch((state) => {
-      derivedState = derivation();
-      watchers.forEach(function (watcher) {
-        return watcher(derivedState);
-      });
+      derived.set(derivation(), true);
     });
   });
 };
@@ -450,25 +446,19 @@ function Derived(reactives, derivation, binding = null) {
     return;
   }
 
-  addDerivationWatcherToReactives(
-    // Add the derivation watcher calculation function to each reactive in the reactives array
-    reactives,
-    derivedState,
-    derivation,
-    watchers
-  );
-
   const derived = {
     get: function () {
       // Get and return the current derived state
       return derivedState;
     },
 
-    set: function (newState) {
+    set: function (newState, internal = false) {
       // Set the new derived state and run all watchers
-      console.warn(
-        "Setting the state of a derived object directly is not recommended."
-      );
+      if (!internal) {
+        console.warn(
+          "Setting the state of a derived object directly is not recommended."
+        );
+      }
       derivedState = newState;
       watchers.forEach(function (watcher) {
         return watcher(derivedState);
@@ -514,6 +504,13 @@ function Derived(reactives, derivation, binding = null) {
       return watchers;
     },
   };
+
+  addDerivationWatcherToReactives(
+    // Add the derivation watcher calculation function to each reactive in the reactives array
+    reactives,
+    derived,
+    derivation
+  );
 
   if (binding) {
     if (typeof binding !== "string") {
