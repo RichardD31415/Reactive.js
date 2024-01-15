@@ -569,5 +569,179 @@
       Now, as you type in the inputs, you'll notice that the console logs the
       three reactives.
     </p>
+    <h3>Form Validation Examples:</h3>
+    <p>
+      Lets create a form validation example. Below is a form with three inputs,
+      a name, email, and password. The name and email inputs are required, and
+      the password must be at least 8 characters long.
+    </p>
+    <p>Lets create our Reactives for the form inputs.</p>
+    <code
+      >const formName = Reactive("", "formName"); <br />
+      const formEmail = Reactive("", "formEmail");<br />
+      const formPassword = Reactive("", "formPassword");</code
+    >
+    <p>Now lets create our Deriveds for the form inputs valid status.</p>
+    <code
+      >const formNameValid = Derived([formName], () => { return
+      formName.get().length > 0; }, "isFormNameValid"); <br />
+      const formEmailValid = Derived([formEmail], () => { return
+      formEmail.get().length > 0; }, "isFormEmailValid"); <br />
+      const formPasswordValid = Derived([formPassword], () => { return
+      formPassword.get().length > 7; }, "isFormPasswordValid");</code
+    >
+    <p>Now lets create our Derived for the form itselfs valid state.</p>
+    <code
+      >const formValid = Derived(<br />[formNameValid, formEmailValid,
+      formPasswordValid],<br />
+      () => {<br />
+      return formNameValid.get() && formEmailValid.get() &&
+      formPasswordValid.get();<br />
+      },<br />
+      "isFormValid");</code
+    >
+    <p>
+      Now lets create our inputs and bind them to the Reactives, and create our
+      submit button and bind it to the formValid Derived.
+    </p>
+    <p>
+      Name:
+      <code
+        >&lt;input type="text" [input]="formName" [class]="isFormNameValid ? ''
+        : 'invalid'" /&gt;</code
+      >:
+    </p>
+    <p>
+      Email:
+      <code
+        >&lt;input type="email" [input]="formEmail" [class]="isFormEmailValid ?
+        '' : 'invalid'" /&gt;</code
+      >:
+    </p>
+    <p>
+      Password:
+      <code
+        >&lt;input type="password" [input]="formPassword"
+        [class]="isFormPasswordValid ? '' : 'invalid'" /&gt;</code
+      >:
+    </p>
+    <p>
+      Submit Button:
+      <code
+        >&lt;button type="submit" [class]="isFormValid ? '' :
+        'invalid'"&gt;Submit&lt;/button&gt;</code
+      >
+    </p>
+    <p>
+      And thats it, we can now update the Derived's derivation functions to
+      adjust the validation logic, but all the binding and state managment is
+      done for us, and the forms classes will automatically update to show the
+      updated state.
+    </p>
+    <p>
+      Try it out below, you'll notice that as you add content to the input
+      fields, the elements and the form will react accordingly, and the invalid
+      classes will be removed once they meet the specific conditions. All of
+      this was achived in less than 90 lines of code, including the html, css
+      and the JS, all while being formatted to be readable and easy to
+      understand.
+    </p>
+    <form onsubmit="event.preventDefault()">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        [input]="formName"
+        [class]="isFormNameValid ? '' : 'invalid'"
+      />
+      <input
+        type="email"
+        name="email"
+        id="email"
+        [input]="formEmail"
+        [class]="isFormEmailValid ? '' : 'invalid'"
+      />
+      <input
+        type="password"
+        name="password"
+        id="password"
+        [input]="formPassword"
+        [class]="isFormPasswordValid ? '' : 'invalid'"
+      />
+      <button type="submit" [class]="isFormValid ? '' : 'invalid'">
+        Submit
+      </button>
+    </form>
+    <style>
+      body {
+        margin-bottom: 4rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      form input.invalid {
+        border: 1px solid red;
+      }
+
+      form button.invalid {
+        cursor: not-allowed;
+      }
+    </style>
+    <script type="module" defer>
+      import { Reactive, Derived } from "./Reactive.js";
+
+      const formName = Reactive("", "formName");
+      const formEmail = Reactive("", "formEmail");
+      const formPassword = Reactive("", "formPassword");
+
+      const formNameValid = Derived(
+        [formName],
+        () => {
+          return formName.get().length > 0;
+        },
+        "isFormNameValid"
+      );
+
+      const formEmailValid = Derived(
+        [formEmail],
+        () => {
+          return formEmail.get().length > 0;
+        },
+        "isFormEmailValid"
+      );
+
+      const formPasswordValid = Derived(
+        [formPassword],
+        () => {
+          return formPassword.get().length > 7;
+        },
+        "isFormPasswordValid"
+      );
+
+      const formValid = Derived(
+        [formNameValid, formEmailValid, formPasswordValid],
+        () => {
+          return (
+            formNameValid.get() &&
+            formEmailValid.get() &&
+            formPasswordValid.get()
+          );
+        },
+        "isFormValid"
+      );
+    </script>
+    <p>Here is the actual code used in this example below</p>
+    <img
+      src="/images/code-snapshot.png"
+      alt="snapshot of html, css, and javascript code that is used to create the form example for the Reactive.js script"
+      width="320"
+      height="840"
+    />
   </body>
 </html>
