@@ -60,7 +60,7 @@ All Reactive types (Reactive, Derived) support input binding, click binding, tex
 
 ## Reactive:
 
-To create a Reactive object, call the Reactive function with an initial state value:
+To create a Reactive object, call the Reactive function with an initial value:
 
 ```
 const reactive = Reactive("initial state");
@@ -106,7 +106,7 @@ To stop watching for changes to the state altogether, call the forget method:
 reactive.forget();
 ```
 
-This will remove all watchers from the Reactive.
+This will remove all watchers from the Reactive. This is highly inadvisable because Reactives rely on watchers to handle the built-in binding functionality.
 
 ## Derived:
 
